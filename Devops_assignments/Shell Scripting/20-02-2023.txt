@@ -1,0 +1,109 @@
+20-FEB-2023
+
+
+
+Define the backup directory: set a variable called BACKUP_DIR to the directory where the backups will be stored, such as /var/backups. 
+
+Define the file system paths to be backed up: set a variable called BACKUP_PATHS to a space-separated list of the directories you want to back up, such as /etc /home /opt /var. 
+
+Define the backup filename: set a variable called BACKUP_FILENAME to the name of the backup file, including the current date and time. You can use the date command to generate the timestamp and append it to a string, such as $(date +%Y-%m-%d_%H-%M-%S)_backup.tar.gz. 
+
+Define the number of backups to keep: set a variable called BACKUP_COUNT to the maximum number of backups you want to keep, such as 5. 
+
+Define a function to create the backup archive: create a function called create_backup that runs the tar command to create a compressed tar archive of the specified directories and saves it to the backup directory with the specified filename. 
+
+Define a function to check if the backup directory exists: create a function called check_backup_dir that checks if the backup directory exists and creates it if it does not. 
+
+Define a function to check if the backup was successful: create a function called check_backup_status that checks the exit status of the tar command to see if the backup      was created successfully or not. If the exit status is 0, output a message saying the backup was created successfully. If the exit status is not 0, output a message saying the backup failed and exit the script with a status code of 1. 
+
+Define a function to remove old backups: create a function called remove_old_backups that gets a list of all the backup files in the backup directory, sorts them by modification time (oldest first), and removes the oldest ones until the number of backups is below the maximum specified in BACKUP_COUNT. 
+
+Check if backup directory exists call the check_backup_dir function to ensure that the backup directory exists. 
+
+Create backup archive: call the create_backup function to create the backup archive. 
+
+Check backup status: call the check_backup_status function to check the exit status of the tar command and output a message indicating whether the backup was successful or not. 
+
+Remove old backups: call the remove_old_backups function to remove any old backup archives if the maximum number of backups has been exceeded. 
+
+Exit script: exit the script with a status code of 0 to indicate successful completion 
+
+ 
+
+#!/bin/bash
+BACKUP_DIR="/home/pratyusha/Desktop/20feb/backup"
+
+
+if [ ! -d $BACKUP_DIR ]
+then
+	
+	mkdir $BACKUP_DIR
+fi
+
+BACKUP_PATHS=("/var/log/" "/etc/")
+
+
+
+BACKUP_FILENAME=$(date +%Y-%m-%d_%H-%M-%S)
+
+
+BACKUP_COUNT=4
+create_backup(){
+
+	for i in ${BACKUP_PATHS[@]}
+	do
+	
+		tar cvfz $BACKUP_DIR/{$BACKUP_FILENAME}_$(basename $i).tgz $i
+	
+
+ 
+	done
+
+
+}
+
+
+check_backup_status(){
+if [ $? -eq 0 ]
+then
+	echo "backup was created successfully"
+else
+
+	echo "backup failed and exit the script with a status code of 1"
+	exit 1
+fi
+
+}
+
+
+remove_old_backups(){
+
+	cd $BACKUP_DIR
+
+
+if [ $(ls | wc -l)  -ge $BACKUP_COUNT ]
+	then
+		files=$(ls -lrt | wc -l)
+		present_no=$(expr $files - $BACKUP_COUNT)
+		delete_backup=$(ls -lrt | head -n $present_no | awk '{print $9}')
+
+
+		for i in $delete_backup
+		do
+			rm -rf $i
+		done
+
+	fi
+
+
+
+
+}
+create_backup
+check_backup_status
+remove_old_backups
+
+
+Output :
+
+backup was created successfully

@@ -1,0 +1,12 @@
+- hosts: localhost
+  roles:
+  - role: ec2
+    ec2key: "working"
+    count: 1
+    tag_name: "webapp"
+    accesskey: "AKIAZV3EIFFQGJEHVLV6"
+    secretkey: "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"
+
+- hosts: tag_Name_webapp
+  roles:
+  - webapp

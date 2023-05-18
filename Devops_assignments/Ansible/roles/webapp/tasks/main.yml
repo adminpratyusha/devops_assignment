@@ -1,0 +1,56 @@
+---
+# tasks file for webapp
+
+- name: install development tools
+  command: sudo yum install -y gcc-c++ make 
+  become: true
+
+- name: curlit
+  shell: curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+  become: true
+
+- name: install nodejs
+  yum:
+    pkg: nodejs
+    state: present
+  become: true
+
+- name: install git
+  yum:
+    pkg: git
+    state: present
+  become: true
+
+- name: Creates directory
+  file:
+    path: /home/ansible/hms
+    state: directory
+  become: true
+
+- name: Clone a github repository
+  git:
+    repo: https://github.com/ManjunathNayak-23/Nodejsdemo.git
+    dest: /home/ansible/hms
+    clone: yes
+    update: yes
+    force: true
+  become: true
+
+  
+- name: install nodemon
+  command: chdir=/home/ansible/hms npm install nodemon
+  become: true
+  
+
+- name: Go to the folder and execute command
+  command: chdir=/home/ansible/hms npm install
+  become: true
+
+- name: start server
+  command: npm start
+  args:
+    chdir: /home/ansible/hms/
+  async: 42
+  poll: 0
+  become: true
+  ignore_errors: yes

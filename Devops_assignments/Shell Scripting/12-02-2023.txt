@@ -1,0 +1,330 @@
+1.The script reads the CSV file and extracts the following information for each user 
+  a. First name          b. Last name          c. Email address          d. Age 
+  The script displays the user data for all users whose age falls within the specified range.
+ 
+#!/bin/bash
+#Entering file path
+echo "enter the file path"
+read FILEPATH
+
+#check if the file exists or not
+if [ ! -f $FILEPATH ]
+then
+        echo "unable to locate file"
+        exit 1
+fi
+
+#Taking range
+echo "enter the age range Eg: 20-25"
+read age
+
+#seperate the lower and higher range from the input
+arr=(${ageRange//[!0-9]/ })
+
+#start age sa,end age ea
+sa="${arr[0]}"
+ea="${arr[1]}"
+
+#loop through the each line in a file
+while read -r line;
+do
+#check if the line age matches the criteria if yes then print the line
+        if [[ $(echo "$line" | awk -F "," '{ print $5 } ') -ge $ sa && $(echo "$line" | awk -F "," '{ print $5 } ') -lt $ea ]]
+        then
+                echo $line
+        fi
+
+done < $FILEPATH
+
+
+output:
+enter the file path
+/home/pratyusha/Desktop/myfile.csv
+enter the age range Eg: 20-25
+20-25
+Ramya,F,66,124,23
+Harini,F,64,121,24
+Shyam,M,71,158,25
+
+###########################################################################################################################################################################################
+
+
+2. Write a shell script that deletes all lines containing a specified word in one or more files supplied as arguments to it?
+
+#!/bin/bash
+
+if [ $# -eq 0]
+then
+echo " No Argument"
+else
+p=$1
+echo enter file name
+read fname
+if [ -f $fname ]
+then 
+echo DELETING $p FROM fname
+sed '/'$p'/d' $fname
+fi
+fi
+
+output:
+
+./task.sh Hello
+DELETING Hello FROM tasks.sh
+Hello World
+Welcome
+File 
+Welcome
+
+###########################################################################################################################################################################################
+
+
+3. write a shell script using arithmetic operators for adding, multiplication and subtraction of any two numbers?
+
+echo "Enter the second number"
+read b
+
+echo "Enter the operator:"
+echo -e "Addition: +\nSubtraction: -\nMultiplication: x\nDivision: /"
+read op
+
+        case $op in
+         +) c=`expr $a + $b`
+                echo "Sum of $a and $b is $c";;
+
+         -) c=`expr $a - $b`
+            echo "Difference of $a and $b is $c";;
+
+         x) c=`expr $a \* $b`
+            echo "Product of $a and $b is $c";;
+
+         /) c=`expr $a / $b`
+            echo "Division of $a and $b is $c";;
+
+         *) echo "Invalid Operator"
+            exit;;
+        esac
+
+output :
+
+Enter the first number
+10
+Enter the second number
+20
+Enter the operator:
+Addition: +
+Subtraction: -
+Multiplication: x
+Division: /
++
+Sum of 10 and 20 is 30
+
+
+###########################################################################################################################################################################################
+
+
+
+4. This example script prompts the user to enter a month and outputs the number of days. There are three possible answers: 30 days, 31 days, 28 or 29 days for February.
+
+ #! /bin/bash
+shopt -s nocasematch
+
+echo "Enter the name of a month."
+
+read month
+
+case $month in
+
+  February)
+
+
+echo "There are 28/29 days in $month.";;
+
+  April | June | September | November)
+
+echo "There are 30 days in $month.";;
+
+  January | March | May | July | August | October | December)
+
+echo "There are 31 days in $month.";;
+
+  *)
+
+echo "Unknown month. Please check if you entered the correct month name: $month";;
+
+esac
+
+output
+
+Enter the name of a month.
+February
+There are 28/29 days in February.
+
+###########################################################################################################################################################################################
+
+5. Write a shell script that takes a list of file paths as input and creates a compressed archive of all the files. The script should prompt the user to specify the compression format (zip or tar), and the archive name.
+
+#!/bin/bash
+
+FILEPATH="/home/pratyusha/Desktop/test"
+
+#echo "enter path"
+#read FILEPATH
+
+echo "Enter compression format ( ZIP or TAR )"
+read compression_format
+
+echo "Enter archive name"
+read archive_name
+
+if [ $compression_format == "zip" ]
+then
+        echo "size before compression is " 
+        du -h ../test
+        cd $FILEPATH
+        zip -r  $FILEPATH/$archive_name.zip ./
+        echo "size after compression is "
+        du -h ../test/$archive_name.zip
+
+
+elif [ $compression_format == "tar" ]
+then
+        echo "size before compression is "
+        du -h ../test
+        cd $FILEPATH
+        tar -zcvf $archive_name.tar.gz ./
+        echo "size after compression is "
+        du -h ../test/$archive_name.tar.gz
+
+fi
+
+output:
+
+Enter compression format ( ZIP or TAR )
+tar
+Enter archive name
+mytar
+size before compression is 
+48M	../test
+./
+./50MB.bin
+./b.txt
+./c.txt
+./ind.zip
+./a.txt
+tar: .: file changed as we read it
+size after compression is 
+52K	../test/mytar.tar.gz
+
+###########################################################################################################################################################################################
+
+6) Write a shell script that takes a directory path and an extension as input and creates a backup of all files in the directory that have the specified extension.
+
+#! /bin/bash
+echo -e "enter directory path:\c"
+read dir1
+echo -e "enter file extension:\c"
+read ext1
+cd $dir1
+fun() {
+    d=$(find $dir1 -type f -name "*$ext1")
+    sudo cp $d ./backup 
+}
+if [ -d backup ]
+then
+ echo -e "backup directory is already exist can i override it (YES/NO):\c"
+  read a
+  if [ $a == YES ] 
+   then 
+   cd backup/
+   sudo rm -f *
+   cd ..
+   fun
+  else
+  echo "same name files are present "
+  exit
+ fi
+else 
+  echo "backup directory is not present so creating the directory "
+   sudo mkdir backup
+  fun
+ fi
+
+ output :
+enter directory path:/home/pratyusha
+enter file extension:.sh
+backup directory is not present so creating the directory 
+[sudo] password for pratyusha: 
+cp: will not overwrite just-created './backup/file1.sh' with '/home/pratyusha/Desktop/backup/file1.sh'
+
+
+###########################################################################################################################################################################################
+
+7.Write a shell script to list all of the directory files in a directory
+
+#! /bin/bash
+
+echo -e "enter directory name:\c"
+read dir
+if [ -d $dir ]
+then
+echo "list of files "
+cd $dir
+ls -a
+else 
+ echo"No directory is present in that name"
+ fi
+
+output :
+
+enter directory name
+dir1
+list of files 
+f1 f2 f3 f4
+
+###########################################################################################################################################################################################
+
+8. Script for iterations if-else, for
+
+#!/bin/bash
+
+echo -n "Enter a number: "
+read VAR
+
+if [[ $VAR -gt 10 ]]
+then
+  echo "The variable is greater than 10."
+elif [[ $VAR -eq 10 ]]
+then
+  echo ""
+else
+  echo "The variable is less than 10."
+fi
+
+
+output
+Enter a number
+10
+The variable is equal to 10.
+
+
+
+###########################################################################################################################################################################################
+
+9. Write a simple script to install any tomcat server
+
+#! /bin/bash
+
+sudo wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.85/bin/apache-tomcat-8.5.85.tar.gz
+sudo tar xvzf apache-tomcat-8.5.85.tar.gz
+sudo mv apache-tomcat-8.5.85 tomcat8
+read command
+if [ $command == "delete" ]
+ then 
+	sudo rm -rf apache-tomcat-8.5.85.tar.gz tomcat8
+	echo "deleted successfully"
+else
+ echo "tomcat present"
+fi
+
+#################################################################################################################################################################################################

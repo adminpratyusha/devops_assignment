@@ -1,0 +1,99 @@
+19-FEB-2023
+
+1. Write a shell script to get current date, time, user name and current working directory.
+
+#!/bin/bash
+echo "Date & Time : `date` "
+echo "User : `whoami` "
+echo "Current working directory : `pwd` "
+
+Output :
+
+Date & Time : Tuesday 21 February 2023 06:01:12 PM IST 
+User : pratyusha 
+Current working directory : /home/pratyusha/Desktop/19feb
+
+
+#######################################################################################################################################################################################################
+
+2. Write a Shell Script that adds two numbers if provided as the command Line Argument and if the two numbers are not entered it outputs an Error Message along with a one-Line of how-to use description.
+
+#!/bin/bash
+
+if [ $# -eq 0 ]
+then
+        echo "Error : please provide in this format- ./task.sh 2 3"
+else
+
+#first argument=fa,second argument=sa
+fa=$1
+sa=$2
+let c=$fa+$sa
+echo $c
+fi
+
+Output:
+7
+
+#######################################################################################################################################################################################################
+
+3.You needs to print a given Number say 10572, in reverse order using a Shell script such that the input is provided using command Line Argument only. If the input data is not provided as Command Line Argument, it should throw and error and should suggest, how to use the script. Write the script but before that tell me the algorithm that needs to be implemented here
+
+#!/bin/bash
+
+if [ $# -eq 1 ]; then
+    if [ $1 -gt 0 ]; then
+        num=$1
+        revNum=0
+        while [ $num -ne 0 ]
+        do
+		:'
+Initialize a reverse number to 0.
+Multiply the reverse number by 10.
+Divide given number by 10 and find modulus.
+Add the modulus and reverse number.
+Divide a given number by 10
+Repeat the step from 2 to 6 until the output comes.
+'
+            testnum=$(( $num %  10 ))
+            revNum=$(( $revNum * 10 + $testnum ))
+            num=$(( $num / 10 ))
+        done
+        echo "Reverse Number:  $revNum of $1"
+    else
+        echo "Input is less than 0, retry with a different number."
+    fi
+else
+    echo "ERROR: Retry with one parameter."
+fi
+
+
+Output :
+
+Reverse Number:  654321 of 123456
+
+#######################################################################################################################################################################################################
+
+4. You are supposed to calculate a real number calculation directly from terminal and not any shell script. What will you do (say the real numbers are 7.56 and 2.453)?
+
+bc
+bc 1.07.1
+Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006, 2008, 2012-2017 Free Software Foundation, Inc.
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type `warranty'. 
+3.45 + 4.25
+7.70
+
+#######################################################################################################################################################################################################
+
+5. You are supposed to find the value of pi upto 100 places of decimal, what is the easiest way to get the result done.
+
+bc -l <<< 'scale=100 ; 22/7'
+3.142857142857142857142857142857142857142857142857142857142857142857\
+1428571428571428571428571428571428
+
+#######################################################################################################################################################################################################
+
+
+
+
